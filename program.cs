@@ -1,168 +1,208 @@
 /*
  * Created by SharpDevelop.
  * User: Elias Muñoz
- * Date: 13/12/2015
- * Time: 06:26 p.m.
+ * Date: 14/12/2015
+ * Time: 07:59 p.m.
+ * Version: 0.0.061
  */
- 
- 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace EM
 {
-	class funciones {
+
+	class funciones
+	{
+		public int n;
 		
 		public funciones(){
-		
+			n=0;
 		}
 		
-		public int ntl(int n){
-			int temp=n;
-			if(n>=10){
-	         temp=n%10;
-	         Console.Write("Decimo - ");
-    		}
-			switch(temp){
-					case 1: Console.Write("Primer");break;
-					case 2: Console.Write("Segundo");break;
-					case 3: Console.Write("Tercero");break;
-					case 4: Console.Write("Cuarto");break;
-					case 5: Console.Write("Quinto");break;
-					case 6: Console.Write("Sexto");break;
-					case 7: Console.Write("Septimo");break;
-					case 8: Console.Write("Octavo");break;
-					case 9: Console.Write("Noveno");break;
-					case 0: Console.Write(" ");break;
+		public string ntl(int n1, bool esc){
+			n=n+1;
+			string NTL=" ";
+			if(n1>=10){
+				NTL="Decimo ";
 			}
-			return 0;
+			n1 = n1%10;
+			
+			switch (n1) {
+					case 1: NTL=NTL+"Primer";break;
+					case 2: NTL=NTL+"Segundo";break;
+					case 3: NTL=NTL+"Tercero";break;
+					case 4: NTL=NTL+"Cuarto";break;
+					case 5: NTL=NTL+"Quinto";break;
+					case 6: NTL=NTL+"Sexto";break;
+					case 7: NTL=NTL+"Septimo";break;
+					case 8: NTL=NTL+"Octavo";break;
+					case 9: NTL=NTL+"Noveno";break;
+					case 0: break;
+			}
+			if (esc==true){
+				Console.Write(NTL);
+			}
+			return NTL;
 		}
 		
-		public void welcome(){
-			
-		}
+		
 	}
 	
-	class semestre{
+	class Persona
+	{
 		
-		private string[] mat_name;
-		private int[][] mat_notas;
-		private int[][] mat_notas_por;
+		public string nombre;
+		public string apellido;
+		public string carrera;
+		public int semestres;
+		public int Contraseña;
+		
 		private funciones fun = new funciones();
 		
-		
-		public semestre(int n){
-			System.Console.Clear();
-			fun.ntl(n);
-			Console.Write(" Semestre \n\n Ingrese el numero de materias: ");
-			string numero=Console.ReadLine();
-			int n1=int.Parse(numero);
-			//dimensionando tanto en el vector como en la matriz, cada posicion del vector corresponde una fila de la matriz  
-			mat_name = new string[n1];
-			mat_notas = new int[n1][];
-			mat_notas_por = new int[n1][];
-			notas(n1);
+		public Persona(bool exis){
+			if(exis==true){
+				Cont();
+			}else{
+				NueCon();
+			}
 		}
 		
-		private int notas(int n){
-			string linea;
-			int n1;
-			int k=0;
-			for (int i=0; i<n; i++){
-				k=i+1;
-				Console.Write("ingreso de notas:\nMateria #"+k+"\nNombre: ");
-				linea=Console.ReadLine();
-				mat_name[i]=linea; 
-				Console.Write("Numero de notas: ");linea=Console.ReadLine();
-				n1=int.Parse(linea);
-				mat_notas[i] = new int[n1+1];
-				mat_notas_por[i] = new int[n1+1];
+		private int NueCon(){
+			FileStream arc = new FileStream("DATA",FileMode.Create);
+			BinaryWriter escarc = new BinaryWriter(arc,Encoding.UTF8);
+			
+			Console.Write("Con nuestra app prodras establecer tu promedio de tu vida universitaria.\nDispondras con muchas funciones que seran de gran ayuda para ti.\n");
+			
+			Console.ReadKey();
+			Console.Write("\nIngrese su informacion basica\nNombre: ");
+			string linea = Console.ReadLine();
+			escarc.Write(linea);
+			
+			Console.Write("Apellido: ");
+			linea = Console.ReadLine();
+			escarc.Write(linea);
+			
+			Console.Write("Carrera: ");
+			linea =Console.ReadLine();
+			escarc.Write(linea);
+			
+			Console.Write("Semestres cursados: ");
+			linea =Console.ReadLine();
+			int Contra = int.Parse(linea);
+			escarc.Write(Contra);
+			
+			Console.Write("\n\nPor seguridad debe establecer una Contraseña\n");
+			bool apta=false;
+			Contra=0;
+			Console.Write("*****ADVERTENCIA*****\nPara la contraseña debe ser un pin de cuatro digitos sin reperticion\n ");
+			while (apta==false){
+				Console.Write("\nContraseña: ");
+				linea = Console.ReadLine();
+				Contra = int.Parse(linea);
+				int temp=Contra,n=0;
+				int[] Contr = new int[4];
 				
-				int sum=0;
-				for (int j=0;j<n1;j++){
-					sum=0;
-					 k=j+1;
-					Console.Write("Nota #{0}: ",k);linea=Console.ReadLine();
-					mat_notas[i][j]=int.Parse(linea);
-					sum=sum+mat_notas[i][j];
-					Console.Write("Porcentaje para la Nota #{0}: ",k);linea=Console.ReadLine();
-					mat_notas_por[i][j]=int.Parse(linea);
+				while (temp!=0){
+					n=n+1;
+					Contr[4-n]=temp%10;
+					temp=temp/10;
 					
 				}
-				mat_notas[i][n1]=sum/n1;
 				
-				Console.Write("\nNumero de creditos de la materia: ");linea=Console.ReadLine();
-				mat_notas_por[i][n1]=int.Parse(linea);
-				
-				Console.Write("\n\n");
-			}
-			return 0;
-		}
-		
-		public void materias(){
-		
-		}
-	}
-	
-	class Program {
-		private funciones fun = new funciones();
-		
-		static void Main(){
-			
-			fun.welcome();
-			
-			int nsem = 13;
-			
-			while (nsem >12){
-				Console.Write("Ingrese el semestre: ");
-				string linea=Console.ReadLine();
-				nsem=int.Parse(linea);
-				
-				if (nsem >12){
-					Console.Write ("\n\nSolo se permite un maximo 12 semestres\n\n");
-				}
-			}
-			
-			if (nsem >=1){
-				semestre sem1 = new semestre(1);
-				if (nsem >=2){
-					semestre sem2 = new semestre(2);
-					if (nsem >=3){
-						semestre sem3 = new semestre(3);
-						if (nsem >=4){
-							semestre sem4 = new semestre(4);
-							if (nsem >=5){
-								semestre sem5 = new semestre(5);
-								if (nsem >=6){
-									semestre sem6 = new semestre(6);
-									if (nsem >=7){
-										semestre sem7 = new semestre(7);
-										if (nsem >=8){
-											semestre sem8 = new semestre(8);
-											if (nsem >=9){
-												semestre sem9 = new semestre(9);
-												if (nsem>=10){
-													semestre sem10 = new semestre(10);
-													if(nsem>=11){
-														semestre sem11 = new semestre(11);
-														if (nsem==12){
-															semestre sem12 = new semestre(12);
-														}
-													}
-												}
-											}
-										}
-									}
-								}
+				if(n==4){
+					apta=true;
+					for (int i=0; i<4;i++){
+						for(int j=0;j<4;j++){
+							if(Contr[i]==Contr[j] & i!=j){
+								apta=false;
+								break;
 							}
 						}
 					}
 				}
+				else{
+					apta=false;
+				}
+				
+				if(apta==false){
+					Console.Write("\n\a*****ERROR*****\nLa contraseña no cumple las condiciones");
+				}
 			}
 			
+			escarc.Write(Contra);
+			escarc.Close();
+			return 0;
+		}
+		
+		private int Cont(){
+			FileStream arc = new FileStream("DATA",FileMode.Open);
+			BinaryReader escarc = new BinaryReader(arc);
 			
+			nombre = Convert.ToString (escarc.ReadString());
+			apellido = Convert.ToString(escarc.ReadString());
+			carrera = Convert.ToString(escarc.ReadString());
+			semestres = Convert.ToInt32(escarc.ReadInt32());
+			Contraseña = Convert.ToInt32(escarc.ReadUInt32());
+			escarc.Close();
+			return 0;
+		}
+		
+	}
+	
+	class Semestre 
+	{
+		public uint Nsem;
+		public string[][] Materias;
+		public float[][] notas;
+		
+		public Semestre(bool exis){
+			if(exis ==true){
+				
+			}else{
+			
+			}
+		}
+		
+	}
+	
+	class Program
+	{
+		private static Persona cliente;
+		private static funciones fun =new funciones();
+		
+		private static int welcome(){
+			Console.Write("*******************************************************************************\n");
+			Console.Write("*******************************************************************************\n");
+			Console.Write("*\t*\t*\t*\t*\t*\t*\t*\t*\t*\n\n");
+			Console.Write("\t\t\t\t Bienvenido \t\t\t\t\n\n");
+			Console.Write("*\t*\t*\t*\t*\t*\t*\t*\t*\t*\n\n");
+			Console.Write("*******************************************************************************\n");
+			Console.Write("*******************************************************************************\n\n");
+			Console.ReadKey();
+			
+			return 0;
+		}
+		
+		private static void Programa(bool exis){
+			
+		}
+		
+		public static void Main()
+		{
+			bool exis = File.Exists("DATA");
+			if (exis==true){
+				cliente = new Persona(exis);
+				Programa(exis);
+			}else{
+				welcome();
+				cliente = new Persona(exis);
+				Programa(exis);
+			}
+			Console.ReadKey();
 		}
 	}
 }
