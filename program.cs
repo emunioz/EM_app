@@ -3,7 +3,7 @@
  * User: Elias Muñoz
  * Date: 14/12/2015
  * Time: 07:59 p.m.
- * Version: 0.0.700
+ * Version: 0.0.750
  */
 using System;
 using System.IO;
@@ -161,8 +161,27 @@ namespace EM
 		}
 		
 		public void Borrar(){
-			
 			ere.Write(dre + ": se ejecuto Borrar \n");
+			
+			if(File.Exists("DATA")==true){
+			   	File.Delete("DATA");
+			   	if (File.Exists("tempDATA")==true) File.Delete("tempDATA");
+			}
+			
+			try {
+				string file="SEM1";
+				if(File.Exists(file)==true){
+					File.Delete(file);
+					file = file +1;
+					for(int i=1;i<=11;i++){
+						file=file+i;
+						if(File.Exists(file)==true)File.Delete(file);
+					}
+					Console.Write("Archivos Borrados");
+				}
+			} catch {
+				Console.Write("Error al momento de borrar los archivos");
+			}
 		}
 		
 		public void Cerrar(){
@@ -197,9 +216,6 @@ namespace EM
 			FileStream arc = new FileStream("DATA",FileMode.Create);
 			BinaryWriter escarc = new BinaryWriter(arc,Encoding.UTF8);
 			
-			Console.Write("Con nuestra app prodras establecer tu promedio de tu vida universitaria.\nDispondras con muchas funciones que seran de gran ayuda para ti.\n");
-			
-			Console.ReadKey();
 			Console.Write("\nIngrese su informacion basica\nNombre: ");
 			string linea = Console.ReadLine();
 			escarc.Write(linea);
@@ -323,6 +339,7 @@ namespace EM
 						for(int l=0;l<k;l++){
 							Console.Write("\nIngrese nota {0}: ",temp2);linea=Console.ReadLine();
 								double numero2 = Convert.ToDouble(linea);
+								if(numero2>10){numero2=numero2/10;}
 								Notas[i][l]= numero2;
 								escarc.Write(numero2);//ESCRIBE ARCHIVO.........
 								double temp3= Notas[i][l];
@@ -509,7 +526,8 @@ namespace EM
 			Console.Write("*******************************************************************************\n");
 			Console.Write("*******************************************************************************\n\n");
 			Console.ReadKey();
-			
+			Console.Write("Con nuestra app prodras establecer tu promedio de tu vida universitaria.\nDispondras con muchas funciones que seran de gran ayuda para ti.\n");
+			Console.ReadKey();
 			return 0;
 		}
 		
@@ -536,11 +554,11 @@ namespace EM
 					else{Console.Write("Normal\n\n");}
 					Console.Write("1- Relacion de las Notas Parciales por asiganturas\n" +
 					              "2- Relacion de las Notas Definitivas\n" +
-					              "3- Regresar\n");
+					              "0- Regresar\n");
 					Console.Write("Elije opcion: ");
 					linea =Console.ReadLine();
 					n1 = int.Parse(linea);
-					if (n1!=3){
+					if (n1!=0){
 						Console.Clear();
 						switch (n1) {
 							case 1: 
@@ -563,6 +581,7 @@ namespace EM
 					              "2- Ingresar Notas\n" +
 					              "3- Cambiar Contraseña\n" +
 					              "4- Crear Copia de seguridad\n" +
+					              "5- Eliminar informacion\n" +
 					              "0- Regresar\n");
 					Console.Write("Elije opcion: ");
 					linea =Console.ReadLine();
@@ -585,6 +604,9 @@ namespace EM
 								cliente.Cont();
 								break;
 							case 4:
+								break;
+							case 5:
+								fun.Borrar();
 								break;
 						}
 						Console.Clear();
@@ -609,22 +631,22 @@ namespace EM
 			}
 			cliente.promedio = cliente.promedio / n1 ;
 			
-			n1=0;
+			n1=1;
 			
-			while (n1!=4){
+			while (n1!=0){
 				Console.Clear();
 				string linea=null;
 				Console.Write("Bienvenido {0}\n\n",cliente.nombre);
 				Console.Write("1- Informacion Personal\n" +
 			              		"2- Informacion Academica\n" +
 			              		"3- Solicitud Academica\n" +
-			              		"4- Salir\n");
+			              		"0- Salir\n");
 				
 					Console.Write("Elije opcion: ");
 					linea =Console.ReadLine();
 					n1 = int.Parse(linea);
 					Console.Clear();
-					if (n1!=4){menu(n1);}
+					if (n1!=0){menu(n1);}
 			}
 			
 		}
